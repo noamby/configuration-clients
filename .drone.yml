@@ -13,6 +13,7 @@ pipeline:
       - poetry config http-basic.twist $PY_PUBLISH_USER $PY_PUBLISH_PASSWORD
       - poetry build
       - poetry publish -r twist -v
+    secrets: [ py_publish_user, py_publish_password ]
 
   build-test-node:
     image: node:lts-alpine3.9
