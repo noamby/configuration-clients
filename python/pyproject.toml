@@ -1,6 +1,6 @@
 [tool.poetry]
-name = "configuration-client"
-version = "0.1.0"
+name = "twist-configuration-client"
+version = "0.1.2"
 description = "Twist Configuration SDK"
 authors = ["Orenus <osea@twistbioscience.com>"]
 license = "Private"
