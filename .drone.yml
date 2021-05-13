@@ -9,6 +9,10 @@ pipeline:
       - poetry install
       - poetry run invoke lint
       - poetry run invoke test
+      - poetry config repositories.twist https://nexus.twistbioscience-staging.com/repository/pypi-hosted/
+      - poetry config http-basic.twist $PY_PUBLISH_USER $PY_PUBLISH_PASSWORD
+      - poetry build
+      - poetry publish -r twist -v
 
   build-test-node:
     image: node:lts-alpine3.9
