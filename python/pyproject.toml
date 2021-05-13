@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "configuration-client"
+version = "0.1.0"
+description = ""
+authors = ["Orenus <oren.sea@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+hvac = "0.9.6"
+json5 = "0.8.5"
+requests = "2.22.0"
+PyYAML = "5.3.1"
+termcolor = "1.1.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^3.4"
+mock = "3.0.5"
+invoke = "1.4.0"
+flake8 = "3.7.9"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

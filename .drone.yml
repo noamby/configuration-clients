@@ -4,8 +4,11 @@ pipeline:
     pull: true
     commands:
       - cd python
-      - pip install invoke
-      - inv install
+      - curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
+      - source $HOME/.poetry/env
+      - poetry install
+      # - pip install invoke
+      # - inv install
       - inv lint
       - inv test
 
