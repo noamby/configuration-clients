@@ -1,6 +1,6 @@
 pipeline:
   build-test-python:
-    image: docker.twistbioscience-staging.com/devops_slave_python:3.8
+    image: docker.twistbioscience-staging.com/devops_slave_python:3.6
     pull: true
     commands:
       - cd python
