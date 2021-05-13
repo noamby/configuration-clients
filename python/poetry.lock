@@ -93,7 +93,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 name = "invoke"
 version = "1.4.0"
 description = "Pythonic task execution"
-category = "dev"
+category = "main"
 optional = false
 python-versions = "*"
 
@@ -247,7 +247,7 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "f1b2acdd2dac515e1dd4887396144d87cf73bf18a1da90f659a5a3c7205a572b"
+content-hash = "b3af281937222742100d9a98693925910f7f220ebd2de9873736c8894e4c490a"
 
 [metadata.files]
 atomicwrites = [

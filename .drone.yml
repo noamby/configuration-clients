@@ -7,10 +7,9 @@ pipeline:
       - curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
       - export PATH="$HOME/.poetry/bin:$PATH"
       - poetry install
-      # - pip install invoke
-      # - inv install
-      - inv lint
-      - inv test
+      - poetry shell
+      - invoke lint
+      - invoke test
 
   build-test-node:
     image: node:lts-alpine3.9
