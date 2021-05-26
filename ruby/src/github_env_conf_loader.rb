@@ -121,9 +121,9 @@ class GithubEnvConfigLoader < EnvConfigLoader
     folder = ''
     # in version 2, files reside in folder respective to fixed environment (dev, qa staging etc)
     if @version == 2
-      folder = @environment + '/'
-      if folder.match(/^dynamic-/)
-        folder = 'dev/' # TODO: should be base
+      folder = @__environment + '/'
+      if folder.match?(/^dynamic-/)
+        folder = "#{get_contextual_env}/"
       end
     end
 

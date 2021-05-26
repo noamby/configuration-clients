@@ -72,8 +72,9 @@ module TwistConf
 
       conf_loader.set_version(conf_version)
 
-      if conf_data['parent_environments']
-        EnvConfig.instance.set_env_fallback(conf_data['parent_environments'])
+      # in case of dynamic that was forked from some base
+      if !ENV[ENV_DYNAMIC_BASE_VAR_NAME].nil?
+        EnvConfig.instance.set_env_fallback([ENV[ENV_DYNAMIC_BASE_VAR_NAME]])
       end
 
       # injecting config loader (github, gitlab or whatever else)
@@ -83,6 +84,13 @@ module TwistConf
       EnvConfig.instance.set_context_handler(EnvConfigContext.new(EnvConfig.env))
       @__context.each do |k, v|
         EnvConfig.add_context(k, v)
+      end
+
+      # cluster is being overridden by the actual context or if its dynamic, it is forced to dev
+      if ENV[ENV_VAR_NAME].match?(/^dynamic-/)
+        EnvConfig.add_context('CLUSTER', 'dev')
+      else
+        EnvConfig.add_context('CLUSTER', get_contextual_env)
       end
 
       if conf_data['categories'].nil?
