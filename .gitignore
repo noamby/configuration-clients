@@ -1,3 +1,4 @@
 .vscode/settings.json
 ruby/.DS_Store
 python/**/*.pyc
+.history

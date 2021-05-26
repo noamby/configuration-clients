@@ -9,7 +9,7 @@ from .config_context_handler import EnvConfigContext
 from .env_conf_loader_factory import EnvConfigLoaderFactory
 from .secrets import Secrets
 from .logger import Logger
-from .common import get_contextual_env
+from .common import get_contextual_env, ENV_DYNAMIC_BASE_VAR_NAME, ENV_VAR_NAME
 
 yaml_type_to_python = {"String": str, "Bool": bool, "Int": int, "Float": float}
 
@@ -60,8 +60,9 @@ class ConfigBuilder:
 
         conf_loader.set_version(conf_version)
 
-        if "parent_environments" in conf_data:
-            EnvConfig.instance().set_env_fallback(conf_data["parent_environments"])
+        # in case of dynamic that was forked from some base
+        if ENV_DYNAMIC_BASE_VAR_NAME in os.environ:
+            EnvConfig.instance().set_env_fallback([ os.environ[ENV_DYNAMIC_BASE_VAR_NAME] ])
 
         # injecting config loader (github, gitlab or whatever else)
         EnvConfig.instance().set_loader(conf_loader)
@@ -71,6 +72,12 @@ class ConfigBuilder:
         if self.__context is not None:
             for k, v in self.__context.items():
                 EnvConfig.add_context(k, v)
+        
+        # cluster is being overridden by the actual context or if its dynamic, it is forced to dev
+        if os.environ[ENV_VAR_NAME].startswith("dynamic-"):
+            EnvConfig.add_context("CLUSTER", "dev")
+        else:
+            EnvConfig.add_context("CLUSTER", get_contextual_env())
 
         if "categories" not in conf_data:
             return

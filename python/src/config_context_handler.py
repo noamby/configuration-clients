@@ -13,8 +13,9 @@ Base class and implementation of config context
 #############################################################################
 import copy
 import re
+import os
 from .logger import Logger
-from .common import ENV_VAR_NAME
+from .common import ENV_VAR_NAME, ENV_DYNAMIC_BASE_VAR_NAME
 from .common import FIXED_ENVS
 from .common import get_contextual_env
 
@@ -63,16 +64,19 @@ class EnvConfigContext:
         self.__app_context_data = {}
         self.__env = env
 
-        # Adding "TWIST_ENV" as context variable referencing the contextual env ("production", "staging"...)
+        # Adding "TWIST_ENV" to context
         self.add(ENV_VAR_NAME, self.__env)
 
         # Adding "ENV_NAME" as context variable referencing the env name (prefix "dynamic-" excluded)
         env_name_without_dynamic_part = re.sub(r"^dynamic-", "", self.__env)
         self.add("ENV_NAME", env_name_without_dynamic_part)
 
+        if ENV_DYNAMIC_BASE_VAR_NAME in os.environ:
+            self.add("DYNAMIC_BASE", os.environ[ENV_DYNAMIC_BASE_VAR_NAME])
+
         # Adding "ENV_NAME_FOR_DOMAIN" as context variable referencing the env name (prefix "dynamic-" excluded)
         # to be used when referencing ingress like mailer-my-dyna-env.twistbioscience-dev.com
-        env_name_for_domain = f"-{env_name_without_dynamic_part}" if self.__env not in FIXED_ENVS else ""
+        env_name_for_domain = f"-{env_name_without_dynamic_part}" if self.__env.startswith("dynamic-") else ""
         self.add("ENV_NAME_FOR_DOMAIN", env_name_for_domain)
 
     def add(self, key, value):
@@ -88,10 +92,6 @@ class EnvConfigContext:
                 f"Context data [{key}] is being overriden from {self.__app_context_data[key]} to {value}"
             )
 
-        # the interpretation of production vs staging is done here.
-        # all ENV names that are not PRODUCTION_BRANCH_NAME are regarded as staging
-        if key == ENV_VAR_NAME:
-            value = get_contextual_env()
 
         Logger.debug(f"Adding context: {key} => {value}")
         self.__app_context_data[key] = value
@@ -168,7 +168,7 @@ class EnvConfigContext:
         for context_decl_key, context_data in context_decleration.items():
             for context_data_key, v in self.__app_context_data.items():
                 # print(
-                #     f"\n ===> context_decl_key: {context_decl_key} context_data: {context_data} context_data_key: {context_data_key} v: {v}"
+                    # f"\n ===> context_decl_key: {context_decl_key} context_data: {context_data} context_data_key: {context_data_key} v: {v}"
                 # )
                 if context_decl_key.lower() == v.lower():
                     current_context = {**current_context, **context_data}
@@ -176,7 +176,8 @@ class EnvConfigContext:
 
         # merging app data context into context found in config json context
         for app_context_key, context_data in self.__app_context_data.items():
-            if app_context_key in current_context:
+            # the cluster key override is allowed
+            if app_context_key != "CLUSTER" and app_context_key in current_context:
                 raise Exception(
                     f"{app_context_key} is already defined by config $context, use another key name"
                 )
