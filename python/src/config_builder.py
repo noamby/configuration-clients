@@ -62,7 +62,7 @@ class ConfigBuilder:
 
         # in case of dynamic that was forked from some base
         if ENV_DYNAMIC_BASE_VAR_NAME in os.environ:
-            EnvConfig.instance().set_env_fallback([ os.environ[ENV_DYNAMIC_BASE_VAR_NAME] ])
+            EnvConfig.instance().set_env_fallback([os.environ[ENV_DYNAMIC_BASE_VAR_NAME]])
 
         # injecting config loader (github, gitlab or whatever else)
         EnvConfig.instance().set_loader(conf_loader)
@@ -72,7 +72,7 @@ class ConfigBuilder:
         if self.__context is not None:
             for k, v in self.__context.items():
                 EnvConfig.add_context(k, v)
-        
+
         # cluster is being overridden by the actual context or if its dynamic, it is forced to dev
         if os.environ[ENV_VAR_NAME].startswith("dynamic-"):
             EnvConfig.add_context("CLUSTER", "dev")

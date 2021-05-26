@@ -16,8 +16,6 @@ import re
 import os
 from .logger import Logger
 from .common import ENV_VAR_NAME, ENV_DYNAMIC_BASE_VAR_NAME
-from .common import FIXED_ENVS
-from .common import get_contextual_env
 
 #############################################################################
 # IMPLEMENTATION                                                            #
@@ -91,7 +89,6 @@ class EnvConfigContext:
             Logger.debug(
                 f"Context data [{key}] is being overriden from {self.__app_context_data[key]} to {value}"
             )
-
 
         Logger.debug(f"Adding context: {key} => {value}")
         self.__app_context_data[key] = value
@@ -168,7 +165,7 @@ class EnvConfigContext:
         for context_decl_key, context_data in context_decleration.items():
             for context_data_key, v in self.__app_context_data.items():
                 # print(
-                    # f"\n ===> context_decl_key: {context_decl_key} context_data: {context_data} context_data_key: {context_data_key} v: {v}"
+                #   f"\n ===> context_decl_key: {context_decl_key} context_data: {context_data} context_data_key: {context_data_key} v: {v}"
                 # )
                 if context_decl_key.lower() == v.lower():
                     current_context = {**current_context, **context_data}

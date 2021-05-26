@@ -1,8 +1,8 @@
 import os
 
 ENV_VAR_NAME = "TWIST_ENV"  # os var name holding the twist runing env
-CONFIGURATION_BASE_KEY = "FORCE_CONFIG" #os var name to override config origin
-ENV_DYNAMIC_BASE_VAR_NAME = "DYNAMIC_BASE" # os var name holding the base origin of this branch (dev / staging / qa or other)
+CONFIGURATION_BASE_KEY = "FORCE_CONFIG"  # os var name to override config origin
+ENV_DYNAMIC_BASE_VAR_NAME = "DYNAMIC_BASE"  # os var name holding the base origin of this branch (dev / staging / qa or other)
 ENVS_VAULT_KEY = "envs"  # key in secret json/dict refering to env overriding value
 
 PRODUCTION_ENV_CONTEXT_NAME = "production"
