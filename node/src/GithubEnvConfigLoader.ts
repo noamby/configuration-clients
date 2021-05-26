@@ -2,6 +2,7 @@ import axios from 'axios';
 import JSON5 from 'json5';
 import IEnvConfigLoader from './IEnvConfigLoader';
 import Secrets from './Secrets';
+import { getContextualEnv } from './Common';
 
 // TODO: should be moved higher up the monorepo to be included by all polyglot clients
 const TWIST_GITHUB_ACCOUNT = 'Twistbioscience';
@@ -181,8 +182,8 @@ export default class GithubEnvConfigLoader implements IEnvConfigLoader {
         // in version 2, files reside in folder respective to fixed environment (dev, qa staging etc)
         if (this.__version === 2) {
             folder = `${this.__environment}/`;
-            if (folder.startsWith('dynamic-')) {
-                folder = 'dev/'; // TODO: should be base
+            if (this.__environment.startsWith('dynamic-')) {
+                folder = `${getContextualEnv()}/`;
             }
         }
 

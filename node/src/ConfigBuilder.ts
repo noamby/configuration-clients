@@ -2,7 +2,7 @@ import YAML from 'yaml';
 
 import fs from 'fs';
 import OSVars, { OSVarType } from './OSVars';
-import { getContextualEnv } from './Common';
+import { getContextualEnv, ENV_DYNAMIC_BASE_VAR_NAME, ENV_VAR_NAME } from './Common';
 import Secrets from './Secrets';
 import EnvConfigLoaderFactory from './EnvConfigLoaderFactory';
 import EnvConfig from './EnvConfig';
@@ -79,11 +79,13 @@ export default class ConfigBuilder {
 
             if (confData.version) {
                 confLoader.setVersion(confData.version);
-                console.log(`Using configuration v${confData.version}`)
+                console.log(`Using configuration v${confData.version}`);
             }
 
-            if (confData.parent_environments) {
-                EnvConfig.instance.setEnvFallback(confData.parent_environments);
+            // in case of dynamic that was forked from some base
+            if (ENV_DYNAMIC_BASE_VAR_NAME in process.env) {
+                const fb: any = process.env[ENV_DYNAMIC_BASE_VAR_NAME];
+                EnvConfig.instance.setEnvFallback([fb]);
             }
 
             // injecting config loader (github, gitlab or whatever else)
@@ -95,6 +97,13 @@ export default class ConfigBuilder {
                 Object.entries(this.__context).forEach(([k, v]) => {
                     EnvConfig.addContext(k, v);
                 });
+            }
+
+            // cluster is being overridden by the actual context or if its dynamic, it is forced to dev
+            if (process.env[ENV_VAR_NAME]?.startsWith('dynamic-')) {
+                EnvConfig.addContext('CLUSTER', 'dev');
+            } else {
+                EnvConfig.addContext('CLUSTER', getContextualEnv());
             }
 
             if (confData.categories) {

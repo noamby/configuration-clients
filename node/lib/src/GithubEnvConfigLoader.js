@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
 const json5_1 = __importDefault(require("json5"));
 const Secrets_1 = __importDefault(require("./Secrets"));
+const Common_1 = require("./Common");
 // TODO: should be moved higher up the monorepo to be included by all polyglot clients
 const TWIST_GITHUB_ACCOUNT = 'Twistbioscience';
 const CONFIGURATION_REPO = 'configuration';
@@ -147,8 +148,8 @@ class GithubEnvConfigLoader {
         // in version 2, files reside in folder respective to fixed environment (dev, qa staging etc)
         if (this.__version === 2) {
             folder = `${this.__environment}/`;
-            if (folder.startsWith('dynamic-')) {
-                folder = 'dev/'; // TODO: should be base
+            if (this.__environment.startsWith('dynamic-')) {
+                folder = `${Common_1.getContextualEnv()}/`;
             }
         }
         const githubApiURL = `https://raw.githubusercontent.com/${TWIST_GITHUB_ACCOUNT}/${CONFIGURATION_REPO}/${branchName}/${folder}${filePath}`;

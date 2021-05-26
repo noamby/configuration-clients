@@ -1,3 +1,5 @@
+export const CONFIGURATION_BASE_KEY = 'FORCE_CONFIG'; // os var name to override config origin
+export const ENV_DYNAMIC_BASE_VAR_NAME = 'DYNAMIC_BASE'; // os var name holding the base origin of this branch (dev / staging / qa or other)
 export const PRODUCTION_BRANCH_NAME = 'production';
 export const ENV_VAR_NAME = 'TWIST_ENV';
 export const ENVS_VAULT_KEY = 'envs';
@@ -43,13 +45,22 @@ export default function isProduction(): boolean {
 export function getContextualEnv() {
     const actualBranchName: string = process.env[ENV_VAR_NAME] || '';
     // the default env context for dynamic env (non-production)
-    let result = DEVELOPMENT_ENV_CONTEXT_NAME;
+    let result = null;
     Object.entries(ENV_CONTEXT_TO_BRANCH_NAME_MAPPING).forEach(([contextName, contextRelatedBranchNames]) => {
         if (contextRelatedBranchNames.includes(actualBranchName)) {
             result = contextName;
         }
     });
-    return result;
+
+    if (result !== null) {
+        return result;
+    }
+
+    if (ENV_DYNAMIC_BASE_VAR_NAME in process.env) {
+        return process.env[ENV_DYNAMIC_BASE_VAR_NAME];
+    }
+
+    return DEVELOPMENT_ENV_CONTEXT_NAME;
 }
 
 export function isFixedEnv(envName: string): boolean {

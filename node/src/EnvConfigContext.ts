@@ -1,5 +1,5 @@
 import IConfigContext from './IConfigContext';
-import { getContextualEnv, ENV_VAR_NAME, isFixedEnv } from './Common';
+import { ENV_DYNAMIC_BASE_VAR_NAME, ENV_VAR_NAME } from './Common';
 
 export const CONTEXT_DECLARATION_KEY = '$context';
 const TEMPLATE_REGEX = /(?:[^{]*)({{)(\s*[\w_\-.]+\s*)(}}).*/;
@@ -36,7 +36,7 @@ export default class EnvConfigContext implements IConfigContext {
     constructor(env: string) {
         this.__env = env;
 
-        // Adding "TWIST_ENV" as context variable referencing the contextual env ("production", "staging", "dev", "qa")
+        // Adding "TWIST_ENV" to context
         this.add(ENV_VAR_NAME, this.__env);
 
         // Adding "ENV_NAME" as context variable referencing the env name(prefix "dynamic-" excluded)
@@ -44,10 +44,14 @@ export default class EnvConfigContext implements IConfigContext {
         const envNameWithoutDynamicPart = env.replace(/^dynamic-/, '');
         this.add('ENV_NAME', envNameWithoutDynamicPart);
 
+        if (ENV_DYNAMIC_BASE_VAR_NAME in process.env) {
+            this.add('DYNAMIC_BASE', process.env[ENV_DYNAMIC_BASE_VAR_NAME]);
+        }
+
         // Adding "ENV_NAME_FOR_DOMAIN" as context variable referencing the env name (prefix "dynamic-" excluded)
         // to be used when referencing ingress like mailer-my-dyna-env.twistbioscience-dev.com
         let envNameForDomain = `-${envNameWithoutDynamicPart}`;
-        if (isFixedEnv(this.__env)) {
+        if (!this.__env.startsWith('dynamic-')) {
             envNameForDomain = '';
         }
         this.add('ENV_NAME_FOR_DOMAIN', envNameForDomain);
@@ -63,14 +67,7 @@ export default class EnvConfigContext implements IConfigContext {
             console.warn(`Context data [${key}] is being overridden from ${this.__appContextData[key]} to ${value}`);
         }
 
-        let theValue = value;
-
-        // the interpretation of production vs staging is done here.
-        // all ENV names that are not PRODUCTION_BRANCH_NAME are regarded as staging
-        // or other (qa, dev, staging) - see Common.ts
-        if (key === ENV_VAR_NAME) {
-            theValue = getContextualEnv();
-        }
+        const theValue = value;
 
         console.log(`Adding context: ${key} => ${theValue}`);
         this.__appContextData[key] = theValue;
@@ -163,12 +160,12 @@ export default class EnvConfigContext implements IConfigContext {
         // eslint-disable-next-line no-restricted-syntax
         for (const [contextDeclKey, contextData] of Object.entries(contextDeclaration)) {
             // eslint-disable-next-line no-restricted-syntax
-            for (const [contextDataKey, v] of Object.entries(this.__appContextData)) {
-                console.log(
-                    `\n ===> context_decl_key: ${contextDeclKey} context_data: ${JSON.stringify(
-                        contextData,
-                    )} context_data_key: ${contextDataKey} v: ${v}`,
-                );
+            for (const v of Object.entries(this.__appContextData)) {
+                // console.log(
+                //     `\n ===> context_decl_key: ${contextDeclKey} context_data: ${JSON.stringify(
+                //         contextData,
+                //     )} context_data_key: ${contextDataKey} v: ${v}`,
+                // );
                 const contextValue: any = v;
                 if (contextDeclKey.toLowerCase() === contextValue.toString().toLowerCase()) {
                     const anyContextData: any = contextData;
@@ -184,7 +181,8 @@ export default class EnvConfigContext implements IConfigContext {
         // merging app data context into context found in config json context
         // eslint-disable-next-line no-restricted-syntax
         for (const [appContextKey, contextData] of Object.entries(this.__appContextData)) {
-            if (currentContext[appContextKey] !== undefined) {
+            // the cluster key override is allowed
+            if (appContextKey !== 'CLUSTER' && currentContext[appContextKey] !== undefined) {
                 throw new Error(`${appContextKey} is already defined by config $context, use another key name`);
             }
             currentContext[appContextKey] = contextData;

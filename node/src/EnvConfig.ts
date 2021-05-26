@@ -9,7 +9,6 @@ import flattenJsonKeys from './utils/jsonUtils';
 
 // TODO: the below should be common to this monorepo (share with with python, ruby etc.)
 const TWIST_ENV_KEY = ENV_VAR_NAME;
-const CONFIGURATION_BASE_KEY = 'CONFIG_BASE_ENV';
 const DEFAULT_ENV_FALLBACK = ['master'];
 
 export default class EnvConfig {
@@ -53,13 +52,6 @@ export default class EnvConfig {
             .get(TWIST_ENV_KEY)
             .required()
             .asString();
-
-        // someone is overriding the running environment to pull config from somewhere else
-        if (process.env[CONFIGURATION_BASE_KEY] !== undefined) {
-            this.__environment = `${env.get(CONFIGURATION_BASE_KEY).asString()}`;
-            console.log(`**** !!! PULLING CONFIGURATION from ${this.__environment} instead of 
-            ${process.env[TWIST_ENV_KEY]} because overriding ${CONFIGURATION_BASE_KEY} is provided`);
-        }
 
         // the config mem db
         this.__configJSON = {};
