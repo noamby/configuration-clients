@@ -136,7 +136,7 @@ class EnvConfigContext {
         // eslint-disable-next-line no-restricted-syntax
         for (const [contextDeclKey, contextData] of Object.entries(contextDeclaration)) {
             // eslint-disable-next-line no-restricted-syntax
-            for (const v of Object.entries(this.__appContextData)) {
+            for (const v of Object.values(this.__appContextData)) {
                 // console.log(
                 //     `\n ===> context_decl_key: ${contextDeclKey} context_data: ${JSON.stringify(
                 //         contextData,
