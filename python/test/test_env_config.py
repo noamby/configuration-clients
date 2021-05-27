@@ -5,11 +5,11 @@
 #############################################################################
 import unittest
 from mock import patch, Mock
-from src.env_config import EnvConfig
-from src.config_context_handler import EnvConfigContext
-from src.env_config import TWIST_ENV_KEY
+from twist_configuration_client.env_config import EnvConfig
+from twist_configuration_client.config_context_handler import EnvConfigContext
+from twist_configuration_client.env_config import TWIST_ENV_KEY
 
-from src.logger import Logger
+from twist_configuration_client.logger import Logger
 from .mock_env_loader import GithubMockEnvConfig
 
 Logger.instance = Mock()

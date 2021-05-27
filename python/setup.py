@@ -6,8 +6,8 @@ from setuptools import setup
 setup(
     name="configuration_client",
     packages=["configuration_client"],
-    package_dir={"configuration_client": "./src"},
-    package_data={"configuration_client": ["src/*"]},
+    package_dir={"configuration_client": "./twist_configuration_client"},
+    package_data={"configuration_client": ["twist_configuration_client/*"]},
     description="environment aware configuration module for Twist modules",
     classifiers=["Private :: Do Not Upload to pypi server"],
     install_requires=["hvac", "requests", "json5==0.8.5", "termcolor", "PyYAML==5.3.1"],

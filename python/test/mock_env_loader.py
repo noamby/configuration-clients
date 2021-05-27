@@ -1,4 +1,4 @@
-from src.abstract_env_conf_loader import EnvConfigLoader
+from twist_configuration_client.abstract_env_conf_loader import EnvConfigLoader
 
 
 class GithubMockEnvConfig(EnvConfigLoader):

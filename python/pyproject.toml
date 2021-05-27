@@ -4,9 +4,6 @@ version = "0.1.285" #THIS IS DETERMINED in the drone build
 description = "Twist Configuration SDK"
 authors = ["Orenus <osea@twistbioscience.com>"]
 license = "Private"
-packages = [
-    { include = "src" },
-]
 
 [tool.poetry.dependencies]
 python = "^3.6"
