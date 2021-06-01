@@ -1,8 +1,9 @@
 pipeline:
   build-test-python:
-    image: docker.twistbioscience-staging.com/devops_slave_python:3.8
+    image: docker.twistbioscience-staging.com/devops_slave_python:3.6
     pull: true
     commands:
+      - bash
       - cd python
       - curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
       - export PATH="$HOME/.poetry/bin:$PATH"
