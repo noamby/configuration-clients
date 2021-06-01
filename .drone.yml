@@ -16,7 +16,6 @@ pipeline:
       - poetry build -f sdist
       - poetry config "repositories.twist-configuration-client" "https://nexus.twistbioscience-staging.com/repository/pypi-hosted/" 
       - poetry env list
-      - cat /root/.config/python_keyring
       - poetry config "http-basic.twist-configuration-client" $PY_PUBLISH_USER $PY_PUBLISH_PASSWORD
       - poetry env list
       - poetry publish -r twist -v
