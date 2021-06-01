@@ -3,7 +3,6 @@ pipeline:
     image: docker.twistbioscience-staging.com/devops_slave_python:3.6
     pull: true
     commands:
-      - bash
       - cd python
       - curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
       - export PATH="$HOME/.poetry/bin:$PATH"
@@ -15,6 +14,7 @@ pipeline:
       - poetry config "repositories.twist-configuration-client" "https://nexus.twistbioscience-staging.com/repository/pypi-hosted/" 
       - poetry env list
       - poetry config "http-basic.twist-configuration-client" $PY_PUBLISH_USER $PY_PUBLISH_PASSWORD
+      - sleep 5
       - poetry env list
       - poetry publish -r twist -v
     secrets: [ py_publish_user, py_publish_password ]
