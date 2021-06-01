@@ -13,7 +13,7 @@ pipeline:
       # - poetry config http-basic.twist '$PY_PUBLISH_USER" $PY_PUBLISH_PASSWORD'
       - poetry version -s "0.1.$DRONE_BUILD_NUMBER"
       - poetry build -f sdist
-      - poetry publish -r twist --username "$PY_PUBLISH_USER" --password "$PY_PUBLISH_PASSWORD" -v
+      - poetry publish -r twist --username "py-publish" --password "$PY_PUBLISH_PASSWORD" -v
     secrets: [ py_publish_user, py_publish_password ]
 
   build-test-node:
