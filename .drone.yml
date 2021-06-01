@@ -13,7 +13,7 @@ pipeline:
       - poetry build -f sdist
       - poetry config "repositories.twist-configuration-client" "https://nexus.twistbioscience-staging.com/repository/pypi-hosted/" 
       - poetry env list
-      - mkdir /root/.config
+      - cat /root/.config/python_keyring
       - poetry config "http-basic.twist-configuration-client" $PY_PUBLISH_USER $PY_PUBLISH_PASSWORD
       - python -c "import keyring.util.platform_; print(keyring.util.platform_.config_root())"
       - poetry env list
