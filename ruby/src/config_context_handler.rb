@@ -44,17 +44,21 @@ class EnvConfigContext
     @__env = env
     @__app_context_data = {}
 
-    # Adding "TWIST_ENV" as context variable referencing the contextual env ("production", "staging", "dev", "qa")
+    # Adding "TWIST_ENV" to context
     add(ENV_VAR_NAME, env)
 
     # Adding "ENV_NAME" as context variable referencing the actual env name (prefix "dynamic-" excluded)
     env_name_without_dynamic_part = env.gsub(/^dynamic-/, '')
     add('ENV_NAME', env_name_without_dynamic_part)
 
+    if !ENV[ENV_DYNAMIC_BASE_VAR_NAME].nil?
+      add('DYNAMIC_BASE', ENV[ENV_DYNAMIC_BASE_VAR_NAME])
+    end
+
     # Adding "ENV_NAME_FOR_DOMAIN" as context variable referencing the env name (prefix "dynamic-" excluded)
     # to be used when referencing ingress like mailer-my-dyna-env.twistbioscience-dev.com
     env_name_for_domain = "-#{env_name_without_dynamic_part}"
-    if FIXED_ENVS.include?(env)
+    if !env.match?(/^dynamic-/)
       env_name_for_domain = ''
     end
 
@@ -64,12 +68,6 @@ class EnvConfigContext
   def add(key, value)
     if @__app_context_data[key]
       Log.debug("Context data [#{key}] is being overriden from #{@__app_context_data[key]} to #{value}")
-    end
-
-    # the interpretation of production vs staging is done here.
-    # all ENV names that are not PRODUCTION_BRANCH_NAME are regarded as staging
-    if key == ENV_VAR_NAME
-      value = get_contextual_env
     end
 
     Log.debug("Adding context: #{key} => #{value}")
@@ -167,7 +165,8 @@ class EnvConfigContext
 
     # merging app data context into context found in config json context
     @__app_context_data.each do |app_context_key, context_data|
-      if !current_context[app_context_key].nil?
+      # the cluster key override is allowed
+      if app_context_key != 'CLUSTER' && !current_context[app_context_key].nil?
         raise "#{app_context_key} is already defined by config $context, use another key name"
       end
 

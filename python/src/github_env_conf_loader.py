@@ -19,6 +19,7 @@ import os
 from .abstract_env_conf_loader import EnvConfigLoader
 from .secrets import Secrets
 from .logger import Logger
+from .common import get_contextual_env
 
 
 #############################################################################
@@ -130,7 +131,7 @@ class GithubEnvConfigLoader(EnvConfigLoader):
         if self._version == 2:
             folder = self._env + "/"
             if folder.startswith('dynamic-'):
-                folder = "dev/"  # TODO: should be base
+                folder = f"{get_contextual_env()}/"
 
         github_url = f"https://raw.githubusercontent.com/{TWIST_GITHUB_ACCOUNT}/{CONFIGURATION_REPO}/{branch_name}/{folder}{file_path}"
         file_path = urllib.parse.quote(file_path, safe="")

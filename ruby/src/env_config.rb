@@ -27,13 +27,6 @@ module TwistConf
     def initialize
       @__env = OSVars.get(TWIST_ENV_KEY)
 
-      # someone is overriding the running environment to pull config from somewhere else
-      if ENV[CONFIGURATION_BASE_KEY]
-        @__env = ENV[CONFIGURATION_BASE_KEY]
-        Log.info("**** !!! PULLING CONFIGURATION from #{@__env} instead of #{ENV[TWIST_ENV_KEY]}
-        because overriding #{CONFIGURATION_BASE_KEY} is provided")
-      end
-
       @__config = {}
       # to be injected:
       @__config_loader = nil

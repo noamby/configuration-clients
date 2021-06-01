@@ -83,6 +83,7 @@ class ConfigBuilder {
         }
     }
     async __buildConf(data) {
+        var _a;
         if (data.config) {
             const confData = data.config;
             const confLoader = new EnvConfigLoaderFactory_1.default().getLoader(confData.provider);
@@ -90,8 +91,10 @@ class ConfigBuilder {
                 confLoader.setVersion(confData.version);
                 console.log(`Using configuration v${confData.version}`);
             }
-            if (confData.parent_environments) {
-                EnvConfig_1.default.instance.setEnvFallback(confData.parent_environments);
+            // in case of dynamic that was forked from some base
+            if (Common_1.ENV_DYNAMIC_BASE_VAR_NAME in process.env) {
+                const fb = process.env[Common_1.ENV_DYNAMIC_BASE_VAR_NAME];
+                EnvConfig_1.default.instance.setEnvFallback([fb]);
             }
             // injecting config loader (github, gitlab or whatever else)
             await EnvConfig_1.default.instance.setLoader(confLoader);
@@ -101,6 +104,13 @@ class ConfigBuilder {
                 Object.entries(this.__context).forEach(([k, v]) => {
                     EnvConfig_1.default.addContext(k, v);
                 });
+            }
+            // cluster is being overridden by the actual context or if its dynamic, it is forced to dev
+            if ((_a = process.env[Common_1.ENV_VAR_NAME]) === null || _a === void 0 ? void 0 : _a.startsWith('dynamic-')) {
+                EnvConfig_1.default.addContext('CLUSTER', 'dev');
+            }
+            else {
+                EnvConfig_1.default.addContext('CLUSTER', Common_1.getContextualEnv());
             }
             if (confData.categories) {
                 for (const category of confData.categories) { // eslint-disable-line

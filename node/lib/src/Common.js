@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isFixedEnv = exports.getContextualEnv = exports.STAGING_BRANCH_NAME = exports.QA_BRANCH_NAME = exports.STAGING_ENV_CONTEXT_NAME = exports.QA_ENV_CONTEXT_NAME = exports.DEVELOPMENT_ENV_CONTEXT_NAME = exports.PRODUCTION_ENV_CONTEXT_NAME = exports.ENVS_VAULT_KEY = exports.ENV_VAR_NAME = exports.PRODUCTION_BRANCH_NAME = void 0;
+exports.isFixedEnv = exports.getContextualEnv = exports.STAGING_BRANCH_NAME = exports.QA_BRANCH_NAME = exports.STAGING_ENV_CONTEXT_NAME = exports.QA_ENV_CONTEXT_NAME = exports.DEVELOPMENT_ENV_CONTEXT_NAME = exports.PRODUCTION_ENV_CONTEXT_NAME = exports.ENVS_VAULT_KEY = exports.ENV_VAR_NAME = exports.PRODUCTION_BRANCH_NAME = exports.ENV_DYNAMIC_BASE_VAR_NAME = exports.CONFIGURATION_BASE_KEY = void 0;
+exports.CONFIGURATION_BASE_KEY = 'FORCE_CONFIG'; // os var name to override config origin
+exports.ENV_DYNAMIC_BASE_VAR_NAME = 'DYNAMIC_BASE'; // os var name holding the base origin of this branch (dev / staging / qa or other)
 exports.PRODUCTION_BRANCH_NAME = 'production';
 exports.ENV_VAR_NAME = 'TWIST_ENV';
 exports.ENVS_VAULT_KEY = 'envs';
@@ -43,13 +45,19 @@ exports.default = isProduction;
 function getContextualEnv() {
     const actualBranchName = process.env[exports.ENV_VAR_NAME] || '';
     // the default env context for dynamic env (non-production)
-    let result = exports.DEVELOPMENT_ENV_CONTEXT_NAME;
+    let result = null;
     Object.entries(ENV_CONTEXT_TO_BRANCH_NAME_MAPPING).forEach(([contextName, contextRelatedBranchNames]) => {
         if (contextRelatedBranchNames.includes(actualBranchName)) {
             result = contextName;
         }
     });
-    return result;
+    if (result !== null) {
+        return result;
+    }
+    if (exports.ENV_DYNAMIC_BASE_VAR_NAME in process.env) {
+        return process.env[exports.ENV_DYNAMIC_BASE_VAR_NAME];
+    }
+    return exports.DEVELOPMENT_ENV_CONTEXT_NAME;
 }
 exports.getContextualEnv = getContextualEnv;
 function isFixedEnv(envName) {

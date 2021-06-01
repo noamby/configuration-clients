@@ -1,3 +1,5 @@
+ENV_DYNAMIC_BASE_VAR_NAME = 'DYNAMIC_BASE' # os var name holding the base origin of this branch (dev / staging / qa or other)
+
 PRODUCTION_ENV_CONTEXT_NAME = 'production'
 DEVELOPMENT_ENV_CONTEXT_NAME = 'dev'
 QA_ENV_CONTEXT_NAME = 'qa'
@@ -38,10 +40,16 @@ end
 def get_contextual_env
   actual_branch_name = ENV[ENV_VAR_NAME]
 
+  # if TWIST_ENV is fixed than its fixed
+  # for dynamic env, the fallback contextual env is determined below using DYNAMIC_BASE
   ENV_CONTEXT_TO_BRANCH_NAME_MAPPING.each do |context_name, context_related_branch_names|
     if context_related_branch_names.include?(actual_branch_name)
       return context_name
     end
+  end
+
+  if !ENV[ENV_DYNAMIC_BASE_VAR_NAME].nil?
+    return ENV[ENV_DYNAMIC_BASE_VAR_NAME]
   end
 
   # default env context for all dynamic branches

@@ -31,16 +31,19 @@ class EnvConfigContext {
         // app_context_data is context added by application to dynamic use in conjunction with conf json $context
         this.__appContextData = {};
         this.__env = env;
-        // Adding "TWIST_ENV" as context variable referencing the contextual env ("production", "staging", "dev", "qa")
+        // Adding "TWIST_ENV" to context
         this.add(Common_1.ENV_VAR_NAME, this.__env);
         // Adding "ENV_NAME" as context variable referencing the env name(prefix "dynamic-" excluded)
         // to be used when referencing ingress like mailer - my - dyna - env.twistbioscience - dev.com
         const envNameWithoutDynamicPart = env.replace(/^dynamic-/, '');
         this.add('ENV_NAME', envNameWithoutDynamicPart);
+        if (Common_1.ENV_DYNAMIC_BASE_VAR_NAME in process.env) {
+            this.add('DYNAMIC_BASE', process.env[Common_1.ENV_DYNAMIC_BASE_VAR_NAME]);
+        }
         // Adding "ENV_NAME_FOR_DOMAIN" as context variable referencing the env name (prefix "dynamic-" excluded)
         // to be used when referencing ingress like mailer-my-dyna-env.twistbioscience-dev.com
         let envNameForDomain = `-${envNameWithoutDynamicPart}`;
-        if (Common_1.isFixedEnv(this.__env)) {
+        if (!this.__env.startsWith('dynamic-')) {
             envNameForDomain = '';
         }
         this.add('ENV_NAME_FOR_DOMAIN', envNameForDomain);
@@ -54,13 +57,7 @@ class EnvConfigContext {
         if (this.__appContextData[key] !== undefined) {
             console.warn(`Context data [${key}] is being overridden from ${this.__appContextData[key]} to ${value}`);
         }
-        let theValue = value;
-        // the interpretation of production vs staging is done here.
-        // all ENV names that are not PRODUCTION_BRANCH_NAME are regarded as staging
-        // or other (qa, dev, staging) - see Common.ts
-        if (key === Common_1.ENV_VAR_NAME) {
-            theValue = Common_1.getContextualEnv();
-        }
+        const theValue = value;
         console.log(`Adding context: ${key} => ${theValue}`);
         this.__appContextData[key] = theValue;
     }
@@ -139,8 +136,12 @@ class EnvConfigContext {
         // eslint-disable-next-line no-restricted-syntax
         for (const [contextDeclKey, contextData] of Object.entries(contextDeclaration)) {
             // eslint-disable-next-line no-restricted-syntax
-            for (const [contextDataKey, v] of Object.entries(this.__appContextData)) {
-                console.log(`\n ===> context_decl_key: ${contextDeclKey} context_data: ${JSON.stringify(contextData)} context_data_key: ${contextDataKey} v: ${v}`);
+            for (const v of Object.values(this.__appContextData)) {
+                // console.log(
+                //     `\n ===> context_decl_key: ${contextDeclKey} context_data: ${JSON.stringify(
+                //         contextData,
+                //     )} context_data_key: ${contextDataKey} v: ${v}`,
+                // );
                 const contextValue = v;
                 if (contextDeclKey.toLowerCase() === contextValue.toString().toLowerCase()) {
                     const anyContextData = contextData;
@@ -155,7 +156,8 @@ class EnvConfigContext {
         // merging app data context into context found in config json context
         // eslint-disable-next-line no-restricted-syntax
         for (const [appContextKey, contextData] of Object.entries(this.__appContextData)) {
-            if (currentContext[appContextKey] !== undefined) {
+            // the cluster key override is allowed
+            if (appContextKey !== 'CLUSTER' && currentContext[appContextKey] !== undefined) {
                 throw new Error(`${appContextKey} is already defined by config $context, use another key name`);
             }
             currentContext[appContextKey] = contextData;

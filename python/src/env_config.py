@@ -18,14 +18,13 @@ import sys
 from .env_conf_loader_factory import EnvConfigLoaderFactory
 from .os_vars import OSVars
 from .logger import Logger
-from .common import ENV_VAR_NAME
+from .common import ENV_VAR_NAME, CONFIGURATION_BASE_KEY
 from .dict_utils import flatten_dict
 
 #############################################################################
 # IMPLEMENTATION                                                            #
 #############################################################################
 TWIST_ENV_KEY = ENV_VAR_NAME
-CONFIGURATION_BASE_KEY = "CONFIG_BASE_ENV"
 DEFAULT_ENV_FALLBACK = ["master"]
 
 
@@ -140,12 +139,6 @@ class EnvConfig(metaclass=EnvConfigMetaClass):
         EnvConfig.__instance = self
         self.__env = os.environ[TWIST_ENV_KEY]
 
-        # someone is overriding the running environment to pull config from somewhere else
-        if CONFIGURATION_BASE_KEY in os.environ:
-            self.__env = os.environ[CONFIGURATION_BASE_KEY]
-            Logger.info(
-                f"**** !!! PULLING CONFIGURATION from {self.__env} instead of {os.environ[TWIST_ENV_KEY]} because overriding {CONFIGURATION_BASE_KEY} is provided"
-            )
         self.__config_json = {}
         # to be injected:
         self.__config_loader = None
