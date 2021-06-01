@@ -9,13 +9,14 @@ pipeline:
       - poetry install
       - poetry run invoke lint
       - poetry run invoke test
+      - echo "[backend]" >> /root/.config/keyringrc.cfg
+      - echo "default-keyring=keyring.backends.fail.Keyring" >> /root/.config/keyringrc.cfg
       - poetry version -s "0.1.$DRONE_BUILD_NUMBER"
       - poetry build -f sdist
       - poetry config "repositories.twist-configuration-client" "https://nexus.twistbioscience-staging.com/repository/pypi-hosted/" 
       - poetry env list
       - cat /root/.config/python_keyring
       - poetry config "http-basic.twist-configuration-client" $PY_PUBLISH_USER $PY_PUBLISH_PASSWORD
-      - python -c "import keyring.util.platform_; print(keyring.util.platform_.config_root())"
       - poetry env list
       - poetry publish -r twist -v
     secrets: [ py_publish_user, py_publish_password ]
