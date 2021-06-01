@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "twist-configuration-client"
-version = "0.1.285" #THIS IS DETERMINED in the drone build
+version = "0.1.11113" #THIS IS DETERMINED in the drone build
 description = "Twist Configuration SDK"
 authors = ["Orenus <osea@twistbioscience.com>"]
 license = "Private"

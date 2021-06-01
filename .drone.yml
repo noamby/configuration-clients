@@ -13,8 +13,9 @@ pipeline:
       - poetry build -f sdist
       - poetry config "repositories.twist-configuration-client" "https://nexus.twistbioscience-staging.com/repository/pypi-hosted/" 
       - poetry env list
+      - mkdir /root/.config
       - poetry config "http-basic.twist-configuration-client" $PY_PUBLISH_USER $PY_PUBLISH_PASSWORD
-      - python -c 'import time; time.sleep(5)'
+      - python -c "import keyring.util.platform_; print(keyring.util.platform_.config_root())"
       - poetry env list
       - poetry publish -r twist -v
     secrets: [ py_publish_user, py_publish_password ]
