@@ -11,11 +11,9 @@ pipeline:
       - poetry run invoke test
       - poetry config repositories.twist "https://nexus.twistbioscience-staging.com/repository/pypi-hosted/"
       # - poetry config http-basic.twist '$PY_PUBLISH_USER" $PY_PUBLISH_PASSWORD'
-      - export POETRY_HTTP_BASIC_PYPI_USERNAME="$PY_PUBLISH_USER"
-      - export POETRY_HTTP_BASIC_PYPI_PASSWORD="$PY_PUBLISH_PASSWORD"
       - poetry version -s "0.1.$DRONE_BUILD_NUMBER"
       - poetry build -f sdist
-      - poetry publish -r twist -v
+      - poetry publish -r twist -v --username=$PY_PUBLISH_USER --password=$PY_PUBLISH_PASSWORD
     secrets: [ py_publish_user, py_publish_password ]
 
   build-test-node:
