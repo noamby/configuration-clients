@@ -9,6 +9,7 @@ pipeline:
       - poetry install
       - poetry run invoke lint
       - poetry run invoke test
+      - mkdir -p /root/.config
       - echo "[backend]" >> /root/.config/keyringrc.cfg
       - echo "default-keyring=keyring.backends.fail.Keyring" >> /root/.config/keyringrc.cfg
       - poetry version -s "0.1.$DRONE_BUILD_NUMBER"
