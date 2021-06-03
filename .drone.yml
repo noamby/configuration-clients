@@ -1,6 +1,6 @@
 pipeline:
   build-test-python:
-    image: docker.twistbioscience-staging.com/devops_slave_python:3.6
+    image: docker.twistbioscience-staging.com/slave_python_poetry:3.6
     pull: true
     commands:
       - cd python
@@ -11,11 +11,11 @@ pipeline:
       - poetry run invoke test
       - poetry version -s "0.1.$DRONE_BUILD_NUMBER"
       - poetry build -f sdist
-      - poetry config "repositories.twist-configuration-client" "https://nexus.twistbioscience-staging.com/repository/pypi-hosted/" 
+      # - poetry config "repositories.twist-configuration-client" "https://nexus.twistbioscience-staging.com/repository/pypi-hosted/" 
       - poetry env list
-      - poetry config "http-basic.twist-configuration-client" $PY_PUBLISH_USER $PY_PUBLISH_PASSWORD
+      # - poetry config "http-basic.twist-configuration-client" $PY_PUBLISH_USER $PY_PUBLISH_PASSWORD
       - poetry env list
-      - poetry publish -r twist-configuration-client -vv
+      - poetry publish -r twist-configuration-client -u "$PY_PUBLISH_USER" -p "$PY_PUBLISH_PASSWORD"
     secrets: [ py_publish_user, py_publish_password ]
 
   build-test-node:
