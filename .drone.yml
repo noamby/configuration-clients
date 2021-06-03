@@ -11,12 +11,13 @@ pipeline:
       - poetry run invoke test
       - poetry version -s "0.1.$DRONE_BUILD_NUMBER"
       - poetry build -f sdist
-      # - poetry config "repositories.twist-configuration-client" "https://nexus.twistbioscience-staging.com/repository/pypi-hosted/" 
-      - poetry env list
-      # - poetry config "http-basic.twist-configuration-client" $PY_PUBLISH_USER $PY_PUBLISH_PASSWORD
-      - poetry env list
+      # the below already configured in image
+      # - poetry config "repositories.twist" "https://nexus.twistbioscience-staging.com/repository/pypi-hosted/" 
+      # - poetry config "http-basic.twist" $PY_PUBLISH_USER $PY_PUBLISH_PASSWORD
       - poetry publish -r twist -u "$PY_PUBLISH_USER" -p "$PY_PUBLISH_PASSWORD"
     secrets: [ py_publish_user, py_publish_password ]
+    when:
+      event: [ push ]
 
   build-test-node:
     image: node:lts-alpine3.9
