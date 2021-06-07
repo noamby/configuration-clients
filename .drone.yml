@@ -10,8 +10,6 @@ pipeline:
       - poetry run invoke lint
       - poetry run invoke test
     secrets: [ py_publish_user, py_publish_password ]
-    when:
-      event: [ push ]
 
   build-and-publish-python:
     image: docker.twistbioscience-staging.com/slave_python_poetry:3.6
