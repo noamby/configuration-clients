@@ -18,6 +18,7 @@ pipeline:
     secrets: [ py_publish_user, py_publish_password ]
     when:
       event: [ push ]
+      branch: [ master ]
 
   build-test-node:
     image: node:lts-alpine3.9
