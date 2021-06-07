@@ -4,8 +4,6 @@ pipeline:
     pull: true
     commands:
       - cd python
-#      - curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
-#      - export PATH="$HOME/.poetry/bin:$PATH"
       - poetry install
       - poetry run invoke lint
       - poetry run invoke test
@@ -16,8 +14,6 @@ pipeline:
     pull: true
     commands:
       - cd python
-#      - curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
-#      - export PATH="$HOME/.poetry/bin:$PATH"
       - poetry install
       - poetry version -s "0.1.$DRONE_BUILD_NUMBER"
       - poetry build -f sdist
