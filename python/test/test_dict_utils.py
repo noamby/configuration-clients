@@ -5,7 +5,7 @@
 #############################################################################
 import unittest
 
-from src.dict_utils import override_dict
+from twist_configuration_client.dict_utils import override_dict
 
 
 #############################################################################
