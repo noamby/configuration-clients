@@ -1,12 +1,13 @@
 config:
+  version: 2
   provider: github
   parent_environments: ['master']
   categories:
-    - GLOBAL
-    - SYSTEM
-    - CONTEXT_TEST
+    # - GLOBAL
+    # - SYSTEM
+    # - CONTEXT_TEST
     # keep the below for verification runs against fixed envs
-    # - EC_TAPI
+    - EC_TAPI
     # - EC_SERVER
     # - EC_EMAIL_GEN
     # - EC_NGS
@@ -16,7 +17,7 @@ config:
     # - EC_TAPI
     # - ECOMMERCE
     # - INFRA
-    # - SERVICES
+    - SERVICES
 
 env-vars:
   # the below are already defined by the Env Config and Secrets modules

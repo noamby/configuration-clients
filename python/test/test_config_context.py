@@ -6,11 +6,11 @@
 import unittest
 import copy
 from mock import Mock, patch
-from src.config_context_handler import EnvConfigContext
-from src.config_context_handler import CONTEXT_DECLARATION_KEY
-from src.config_context_handler import validate_no_template_left
-from src.common import ENV_VAR_NAME
-from src.logger import Logger
+from twist_configuration_client.config_context_handler import EnvConfigContext
+from twist_configuration_client.config_context_handler import CONTEXT_DECLARATION_KEY
+from twist_configuration_client.config_context_handler import validate_no_template_left
+from twist_configuration_client.common import ENV_VAR_NAME
+from twist_configuration_client.logger import Logger
 
 Logger.instance = Mock()
 

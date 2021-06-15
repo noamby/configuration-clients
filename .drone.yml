@@ -1,13 +1,30 @@
 pipeline:
-  build-test-python:
-    image: docker.twistbioscience-staging.com/devops_slave_python:3.6
+  test-python:
+    image: docker.twistbioscience-staging.com/slave_python_poetry:3.6
     pull: true
     commands:
       - cd python
-      - pip install invoke
-      - inv install
-      - inv lint
-      - inv test
+      - poetry install
+      - poetry run invoke lint
+      - poetry run invoke test
+    secrets: [ py_publish_user, py_publish_password ]
+
+  build-and-publish-python:
+    image: docker.twistbioscience-staging.com/slave_python_poetry:3.6
+    pull: true
+    commands:
+      - cd python
+      - poetry install
+      - poetry version -s "0.1.$DRONE_BUILD_NUMBER"
+      - poetry build -f sdist
+      # the below already configured in image
+      # - poetry config "repositories.twist" "https://nexus.twistbioscience-staging.com/repository/pypi-hosted/"
+      # - poetry config "http-basic.twist" $PY_PUBLISH_USER $PY_PUBLISH_PASSWORD
+      - poetry publish -r twist -u "$PY_PUBLISH_USER" -p "$PY_PUBLISH_PASSWORD"
+    secrets: [ py_publish_user, py_publish_password ]
+    when:
+      event: [ push ]
+      branch: [ master ]
 
   build-test-node:
     image: node:lts-alpine3.9

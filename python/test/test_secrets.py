@@ -5,11 +5,11 @@
 #############################################################################
 import unittest
 from mock import patch, Mock
-from src.secrets import Secrets
-from src.os_vars import OSVars
-from src.env_config import TWIST_ENV_KEY
+from twist_configuration_client.secrets import Secrets
+from twist_configuration_client.os_vars import OSVars
+from twist_configuration_client.env_config import TWIST_ENV_KEY
 
-from src.logger import Logger
+from twist_configuration_client.logger import Logger
 
 Logger.instance = Mock()
 
