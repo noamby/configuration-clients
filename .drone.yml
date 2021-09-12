@@ -1,47 +1,60 @@
-pipeline:
-  test-python:
+kind: pipeline
+name: default
+platform:
+  os: linux
+  arch: amd64
+steps:
+  - name: test-python
+    pull: always
     image: docker.twistbioscience-staging.com/slave_python_poetry:3.6
-    pull: true
     commands:
       - cd python
       - poetry install
       - poetry run invoke lint
       - poetry run invoke test
-    secrets: [ py_publish_user, py_publish_password ]
-
-  build-and-publish-python:
+    environment:
+      PY_PUBLISH_PASSWORD:
+        from_secret: py_publish_password
+      PY_PUBLISH_USER:
+        from_secret: py_publish_user
+  - name: build-and-publish-python
+    pull: always
     image: docker.twistbioscience-staging.com/slave_python_poetry:3.6
-    pull: true
     commands:
       - cd python
       - poetry install
       - poetry version -s "0.1.$DRONE_BUILD_NUMBER"
       - poetry build -f sdist
-      # the below already configured in image
-      # - poetry config "repositories.twist" "https://nexus.twistbioscience-staging.com/repository/pypi-hosted/"
-      # - poetry config "http-basic.twist" $PY_PUBLISH_USER $PY_PUBLISH_PASSWORD
       - poetry publish -r twist -u "$PY_PUBLISH_USER" -p "$PY_PUBLISH_PASSWORD"
-    secrets: [ py_publish_user, py_publish_password ]
+    environment:
+      PY_PUBLISH_PASSWORD:
+        from_secret: py_publish_password
+      PY_PUBLISH_USER:
+        from_secret: py_publish_user
     when:
-      event: [ push ]
-      branch: [ master ]
-
-  build-test-node:
+      branch:
+        - master
+      event:
+        - push
+  - name: build-test-node
+    pull: always
     image: node:lts-alpine3.9
-    pull: true
     commands:
       - cd node
       - npm install
       - npm run lint
       - npm run test
-
-  build-test-ruby:
+  - name: build-test-ruby
+    pull: always
     image: docker.twistbioscience-staging.com/ecommerce_web:ruby-2.6.3
-    pull: true
     commands:
       - cd ruby
       - gem install -g Gemfile
       - rubocop src tests *.rb
       - yardoc src/*
       - ruby -Ilib:test tests/tests.rb
-    secrets: [ "nexus_pass"]
+    environment:
+      NEXUS_PASS:
+        from_secret: nexus_pass
+image_pull_secrets:
+  - .dockerconfigjson
