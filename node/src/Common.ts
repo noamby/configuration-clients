@@ -9,6 +9,10 @@ export const QA_ENV_CONTEXT_NAME = 'qa';
 export const STAGING_ENV_CONTEXT_NAME = 'staging';
 export const QA_BRANCH_NAME = 'qa';
 export const STAGING_BRANCH_NAME = 'staging';
+export const PDX_UAT_A_BRANCH_NAME = 'pdx-uat-a';
+export const PDX_UAT_B_BRANCH_NAME = 'pdx-uat-b';
+export const PDX_UAT_A_ENV_CONTEXT_NAME = 'pdx-uat-a';
+export const PDX_UAT_B_ENV_CONTEXT_NAME = 'pdx-uat-b';
 
 // while we might end up using a different contextual environments pipeline (for example: staging -> production or qa -> staging -> production )
 // the below is a tool to defining the actual context based on branch name.add()
@@ -28,6 +32,8 @@ const ENV_CONTEXT_TO_BRANCH_NAME_MAPPING = {
     [DEVELOPMENT_ENV_CONTEXT_NAME]: ['dev', 'develop'],
     [QA_ENV_CONTEXT_NAME]: [QA_BRANCH_NAME],
     [STAGING_ENV_CONTEXT_NAME]: [STAGING_BRANCH_NAME],
+    [PDX_UAT_A_ENV_CONTEXT_NAME]: [PDX_UAT_B_BRANCH_NAME],
+    [PDX_UAT_B_ENV_CONTEXT_NAME]: [PDX_UAT_B_BRANCH_NAME],
 };
 
 const FIXED_ENVS = [
@@ -36,6 +42,8 @@ const FIXED_ENVS = [
     'develop',
     QA_ENV_CONTEXT_NAME,
     STAGING_ENV_CONTEXT_NAME,
+    PDX_UAT_A_ENV_CONTEXT_NAME,
+    PDX_UAT_B_ENV_CONTEXT_NAME,
 ];
 
 export default function isProduction(): boolean {

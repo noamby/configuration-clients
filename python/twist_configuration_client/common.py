@@ -12,8 +12,20 @@ STAGING_ENV_CONTEXT_NAME = "staging"
 PRODUCTION_BRANCH_NAME = "production"
 QA_BRANCH_NAME = "qa"
 STAGING_BRANCH_NAME = "staging"
+PDX_UAT_A_BRANCH_NAME = "pdx-uat-a"
+PDX_UAT_B_BRANCH_NAME = "pdx-uat-b"
+PDX_UAT_A_ENV_CONTEXT_NAME = "pdx-uat-a"
+PDX_UAT_B_ENV_CONTEXT_NAME = "pdx-uat-b"
 
-FIXED_ENVS = [PRODUCTION_ENV_CONTEXT_NAME, DEVELOPMENT_ENV_CONTEXT_NAME, "develop", QA_ENV_CONTEXT_NAME, STAGING_ENV_CONTEXT_NAME]
+FIXED_ENVS = [
+    PRODUCTION_ENV_CONTEXT_NAME, 
+    DEVELOPMENT_ENV_CONTEXT_NAME, 
+    "develop", 
+    QA_ENV_CONTEXT_NAME, 
+    STAGING_ENV_CONTEXT_NAME,
+    PDX_UAT_A_ENV_CONTEXT_NAME,
+    PDX_UAT_B_ENV_CONTEXT_NAME
+]
 
 # while we might end up using a different contextual environments pipeline (for example: staging -> production or qa -> staging -> production )
 # the below is a tool to defining the actual context based on branch name.add()
@@ -33,6 +45,8 @@ ENV_CONTEXT_TO_BRANCH_NAME_MAPPING = {
     DEVELOPMENT_ENV_CONTEXT_NAME: ["dev", "develop"],
     QA_ENV_CONTEXT_NAME: [QA_BRANCH_NAME],
     STAGING_ENV_CONTEXT_NAME: [STAGING_BRANCH_NAME],
+    PDX_UAT_A_ENV_CONTEXT_NAME: [PDX_UAT_B_BRANCH_NAME],
+    PDX_UAT_B_ENV_CONTEXT_NAME: [PDX_UAT_B_BRANCH_NAME]
 }
 
 
