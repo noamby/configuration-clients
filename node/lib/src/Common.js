@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isFixedEnv = exports.getContextualEnv = exports.STAGING_BRANCH_NAME = exports.QA_BRANCH_NAME = exports.STAGING_ENV_CONTEXT_NAME = exports.QA_ENV_CONTEXT_NAME = exports.DEVELOPMENT_ENV_CONTEXT_NAME = exports.PRODUCTION_ENV_CONTEXT_NAME = exports.ENVS_VAULT_KEY = exports.ENV_VAR_NAME = exports.PRODUCTION_BRANCH_NAME = exports.ENV_DYNAMIC_BASE_VAR_NAME = exports.CONFIGURATION_BASE_KEY = void 0;
+exports.isFixedEnv = exports.getContextualEnv = exports.PDX_UAT_B_ENV_CONTEXT_NAME = exports.PDX_UAT_A_ENV_CONTEXT_NAME = exports.PDX_UAT_B_BRANCH_NAME = exports.PDX_UAT_A_BRANCH_NAME = exports.STAGING_BRANCH_NAME = exports.QA_BRANCH_NAME = exports.STAGING_ENV_CONTEXT_NAME = exports.QA_ENV_CONTEXT_NAME = exports.DEVELOPMENT_ENV_CONTEXT_NAME = exports.PRODUCTION_ENV_CONTEXT_NAME = exports.ENVS_VAULT_KEY = exports.ENV_VAR_NAME = exports.PRODUCTION_BRANCH_NAME = exports.ENV_DYNAMIC_BASE_VAR_NAME = exports.CONFIGURATION_BASE_KEY = void 0;
 exports.CONFIGURATION_BASE_KEY = 'FORCE_CONFIG'; // os var name to override config origin
 exports.ENV_DYNAMIC_BASE_VAR_NAME = 'DYNAMIC_BASE'; // os var name holding the base origin of this branch (dev / staging / qa or other)
 exports.PRODUCTION_BRANCH_NAME = 'production';
@@ -12,6 +12,10 @@ exports.QA_ENV_CONTEXT_NAME = 'qa';
 exports.STAGING_ENV_CONTEXT_NAME = 'staging';
 exports.QA_BRANCH_NAME = 'qa';
 exports.STAGING_BRANCH_NAME = 'staging';
+exports.PDX_UAT_A_BRANCH_NAME = 'pdx-uat-a';
+exports.PDX_UAT_B_BRANCH_NAME = 'pdx-uat-b';
+exports.PDX_UAT_A_ENV_CONTEXT_NAME = 'pdx-uat-a';
+exports.PDX_UAT_B_ENV_CONTEXT_NAME = 'pdx-uat-b';
 // while we might end up using a different contextual environments pipeline (for example: staging -> production or qa -> staging -> production )
 // the below is a tool to defining the actual context based on branch name.add()
 // Based on the current logic implemented via config-context, the below suggests that:
@@ -30,6 +34,8 @@ const ENV_CONTEXT_TO_BRANCH_NAME_MAPPING = {
     [exports.DEVELOPMENT_ENV_CONTEXT_NAME]: ['dev', 'develop'],
     [exports.QA_ENV_CONTEXT_NAME]: [exports.QA_BRANCH_NAME],
     [exports.STAGING_ENV_CONTEXT_NAME]: [exports.STAGING_BRANCH_NAME],
+    [exports.PDX_UAT_A_ENV_CONTEXT_NAME]: [exports.PDX_UAT_A_BRANCH_NAME],
+    [exports.PDX_UAT_B_ENV_CONTEXT_NAME]: [exports.PDX_UAT_B_BRANCH_NAME],
 };
 const FIXED_ENVS = [
     exports.PRODUCTION_ENV_CONTEXT_NAME,
@@ -37,6 +43,8 @@ const FIXED_ENVS = [
     'develop',
     exports.QA_ENV_CONTEXT_NAME,
     exports.STAGING_ENV_CONTEXT_NAME,
+    exports.PDX_UAT_A_ENV_CONTEXT_NAME,
+    exports.PDX_UAT_B_ENV_CONTEXT_NAME,
 ];
 function isProduction() {
     return process.env[exports.ENV_VAR_NAME] === exports.PRODUCTION_BRANCH_NAME;
