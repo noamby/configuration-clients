@@ -82,8 +82,8 @@ class Secrets:
 
         vault_url = OSVars.get(VAULT_URL_KEY)
 
-        vault_user = OSVars.get(VAULT_USER_KEY)
-        vault_pass = OSVars.get(VAULT_PASS_KEY)
+        vault_user = OSVars.get(VAULT_USER_KEY).strip()
+        vault_pass = OSVars.get(VAULT_PASS_KEY).strip()
 
         vault_pass_to_debug = vault_pass[0:2] + "*****" + vault_pass[-2:]
 
