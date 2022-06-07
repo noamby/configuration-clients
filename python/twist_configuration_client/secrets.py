@@ -85,7 +85,10 @@ class Secrets:
         vault_user = OSVars.get(VAULT_USER_KEY)
         vault_pass = OSVars.get(VAULT_PASS_KEY)
 
+        vault_pass_to_debug=vault_pass[0:2] + "*****" + vault_pass[-2:]
+
         Logger.info(f"connecting to vault on: {vault_url} with user: {vault_user}")
+        Logger.debug(f"connecting to vault on: {vault_url} with pass: {vault_pass_to_debug}")
 
         try:
             self.__client = hvac.Client(url=vault_url, timeout=30)
