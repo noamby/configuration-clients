@@ -57,8 +57,8 @@ module TwistConf
         #   config.read_timeout = 30
         # end
         Vault.address = vault_url
-        v_user = OSVars.get(VAULT_USER_KEY)
-        v_pass = OSVars.get(VAULT_PASS_KEY)
+        v_user = OSVars.get(VAULT_USER_KEY).strip
+        v_pass = OSVars.get(VAULT_PASS_KEY).strip
         Vault.auth.userpass(v_user, v_pass)
 
         @__logged_in = true

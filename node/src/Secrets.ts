@@ -53,8 +53,8 @@ export default class Secrets {
 
         try {
             const ret = await this.__vault.userpassLogin({
-                username: OSVars.get(VAULT_USER_KEY),
-                password: OSVars.get(VAULT_PASS_KEY),
+                username: OSVars.get(VAULT_USER_KEY).trim(),
+                password: OSVars.get(VAULT_PASS_KEY).trim()
             });
 
             this.__vault.token = ret.auth.client_token;

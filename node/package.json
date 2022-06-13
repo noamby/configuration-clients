@@ -1,6 +1,6 @@
 {
   "name": "configuration-client",
-  "version": "0.0.32",
+  "version": "0.0.33",
   "description": "Twist configuration aware client",
   "main": "main.js",
   "scripts": {

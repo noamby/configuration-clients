@@ -55,8 +55,8 @@ class Secrets {
         }
         try {
             const ret = await this.__vault.userpassLogin({
-                username: OSVars_1.default.get(VAULT_USER_KEY),
-                password: OSVars_1.default.get(VAULT_PASS_KEY),
+                username: OSVars_1.default.get(VAULT_USER_KEY).trim(),
+                password: OSVars_1.default.get(VAULT_PASS_KEY).trim()
             });
             this.__vault.token = ret.auth.client_token;
             console.log(`successfully connected to Vault on ${OSVars_1.default.get(VAULT_URL_KEY)}`);
