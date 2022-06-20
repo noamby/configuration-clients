@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'configuration-client'
-  s.version     = '0.0.938'
+  s.version     = '0.0.939'
   s.date        = '2020-02-14'
   s.summary     = 'Twist ruby configuration client'
   s.description = 'A configuration client for ruby based Twist services'
